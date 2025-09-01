@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Coverage Analysis Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .file-upload {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .upload-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .upload-box {
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-box:hover {
+            border-color: #764ba2;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .upload-box input[type="file"] {
+            display: none;
+        }
+
+        .upload-box label {
+            cursor: pointer;
+            display: block;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .analysis-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .analysis-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .analysis-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .results {
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .coverage-high { color: #28a745; font-weight: 600; }
+        .coverage-medium { color: #ffc107; font-weight: 600; }
+        .coverage-low { color: #dc3545; font-weight: 600; }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .summary-card h3 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .summary-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Risk Coverage Analysis Dashboard</h1>
+            <p>Analyze risk identification coverage across domains, entities, timing, and intent</p>
+        </div>
+
+        <div class="file-upload">
+            <div class="upload-section">
+                <div class="upload-box" onclick="document.getElementById('evalFile').click()">
+                    <input type="file" id="evalFile" accept=".csv" />
+                    <label for="evalFile">
+                        📊 Upload Evaluation Results CSV<br>
+                        <small>Risk identification evaluation results</small>
+                    </label>
+                    <div id="evalStatus"></div>
+                </div>
+                
+                <div class="upload-box" onclick="document.getElementById('riskFile').click()">
+                    <input type="file" id="riskFile" accept=".csv" />
+                    <label for="riskFile">
+                        📋 Upload Risk Repository CSV<br>
+                        <small>MIT Risk Repository data</small>
+                    </label>
+                    <div id="riskStatus"></div>
+                </div>
+            </div>
+            
+            <button class="analysis-btn" onclick="analyzeData()" id="analyzeBtn" disabled>
+                🔍 Analyze Risk Coverage
+            </button>
+        </div>
+
+        <div class="results" id="results">
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3 id="totalRisks">-</h3>
+                    <p>Total Risks Evaluated</p>
+                </div>
+                <div class="summary-card">
+                    <h3 id="coveredRisks">-</h3>
+                    <p>Covered Risks</p>
+                </div>
+                <div class="summary-card">
+                    <h3 id="coverageRate">-</h3>
+                    <p>Overall Coverage Rate</p>
+                </div>
+                <div class="summary-card">
+                    <h3 id="uniqueDomains">-</h3>
+                    <p>Unique Domains</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h2>📈 Domain & Subdomain Coverage</h2>
+                    <div class="chart-container">
+                        <canvas id="domainChart"></canvas>
+                    </div>
+                    <div class="table-container">
+                        <table id="domainTable">
+                            <thead>
+                                <tr>
+                                    <th>Domain</th>
+                                    <th>Subdomain</th>
+                                    <th>Total Risks</th>
+                                    <th>Covered</th>
+                                    <th>Coverage %</th>
+                                    <th>Gap</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <h2>🎯 Entity, Timing & Intent Coverage</h2>
+                    <div class="chart-container">
+                        <canvas id="characteristicsChart"></canvas>
+                    </div>
+                    <div class="table-container">
+                        <table id="characteristicsTable">
+                            <thead>
+                                <tr>
+                                    <th>Characteristic</th>
+                                    <th>Category</th>
+                                    <th>Total Risks</th>
+                                    <th>Covered</th>
+                                    <th>Coverage %</th>
+                                    <th>Gap</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let evaluationData = [];
+        let riskRepoData = [];
+        let domainChart, characteristicsChart;
+
+        // File upload handlers
+        document.getElementById('evalFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('evalStatus').innerHTML = `✅ ${file.name}`;
+                parseCSV(file, 'evaluation');
+            }
+        });
+
+        document.getElementById('riskFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('riskStatus').innerHTML = `✅ ${file.name}`;
+                parseCSV(file, 'risk');
+            }
+        });
+
+        function parseCSV(file, type) {
+            Papa.parse(file, {
+                header: true,
+                complete: function(results) {
+                    if (type === 'evaluation') {
+                        evaluationData = results.data;
+                        console.log('Evaluation data loaded:', evaluationData.length, 'rows');
+                    } else {
+                        riskRepoData = results.data;
+                        console.log('Risk repo data loaded:', riskRepoData.length, 'rows');
+                    }
+                    
+                    if (evaluationData.length > 0 && riskRepoData.length > 0) {
+                        document.getElementById('analyzeBtn').disabled = false;
+                    }
+                },
+                error: function(error) {
+                    console.error('CSV parsing error:', error);
+                    alert('Error parsing CSV file: ' + error.message);
+                }
+            });
+        }
+
+        function analyzeData() {
+            if (evaluationData.length === 0 || riskRepoData.length === 0) {
+                alert('Please upload both CSV files first');
+                return;
+            }
+
+            document.getElementById('analyzeBtn').innerHTML = '⏳ Analyzing...';
+            document.getElementById('analyzeBtn').disabled = true;
+
+            // Create lookup maps for efficient data matching
+            const evalMap = new Map();
+            evaluationData.forEach(row => {
+                if (row.ev_id) {
+                    evalMap.set(row.ev_id.trim(), row);
+                }
+            });
+
+            const riskMap = new Map();
+            riskRepoData.forEach(row => {
+                if (row.Ev_ID) {
+                    riskMap.set(row.Ev_ID.trim(), row);
+                }
+            });
+
+            // Analyze domain and subdomain coverage
+            const domainAnalysis = analyzeDomainCoverage(evalMap, riskMap);
+            const characteristicsAnalysis = analyzeCharacteristicsCoverage(evalMap, riskMap);
+
+            // Update summary statistics
+            updateSummaryStats(evalMap, riskMap);
+
+            // Create visualizations
+            createDomainChart(domainAnalysis);
+            createCharacteristicsChart(characteristicsAnalysis);
+
+            // Create tables
+            createDomainTable(domainAnalysis);
+            createCharacteristicsTable(characteristicsAnalysis);
+
+            // Show results
+            document.getElementById('results').classList.add('show');
+            document.getElementById('analyzeBtn').innerHTML = '🔍 Analyze Risk Coverage';
+            document.getElementById('analyzeBtn').disabled = false;
+        }
+
+        function analyzeDomainCoverage(evalMap, riskMap) {
+            const domainStats = new Map();
+
+            riskMap.forEach((riskRow, evId) => {
+                const evalRow = evalMap.get(evId);
+                const domain = riskRow.Domain || 'Unknown';
+                const subdomain = riskRow['Sub-domain'] || 'Unknown';
+                const key = `${domain}|${subdomain}`;
+
+                if (!domainStats.has(key)) {
+                    domainStats.set(key, {
+                        domain,
+                        subdomain,
+                        total: 0,
+                        covered: 0
+                    });
+                }
+
+                const stats = domainStats.get(key);
+                stats.total++;
+                
+                if (evalRow && evalRow.identified === 'True') {
+                    stats.covered++;
+                }
+            });
+
+            return Array.from(domainStats.values()).map(stat => ({
+                ...stat,
+                coverage: stat.total > 0 ? ((stat.covered / stat.total) * 100).toFixed(1) : '0.0',
+                gap: stat.total - stat.covered
+            }));
+        }
+
+        function analyzeCharacteristicsCoverage(evalMap, riskMap) {
+            const characteristics = ['Entity', 'Intent', 'Timing'];
+            const charStats = new Map();
+
+            characteristics.forEach(char => {
+                riskMap.forEach((riskRow, evId) => {
+                    const evalRow = evalMap.get(evId);
+                    const value = riskRow[char] || 'Unknown';
+                    const key = `${char}|${value}`;
+
+                    if (!charStats.has(key)) {
+                        charStats.set(key, {
+                            characteristic: char,
+                            category: value,
+                            total: 0,
+                            covered: 0
+                        });
+                    }
+
+                    const stats = charStats.get(key);
+                    stats.total++;
+                    
+                    if (evalRow && evalRow.identified === 'True') {
+                        stats.covered++;
+                    }
+                });
+            });
+
+            return Array.from(charStats.values()).map(stat => ({
+                ...stat,
+                coverage: stat.total > 0 ? ((stat.covered / stat.total) * 100).toFixed(1) : '0.0',
+                gap: stat.total - stat.covered
+            }));
+        }
+
+        function updateSummaryStats(evalMap, riskMap) {
+            const totalRisks = riskMap.size;
+            let coveredRisks = 0;
+            const domains = new Set();
+
+            riskMap.forEach((riskRow, evId) => {
+                const evalRow = evalMap.get(evId);
+                if (evalRow && evalRow.identified === 'True') {
+                    coveredRisks++;
+                }
+                if (riskRow.Domain) {
+                    domains.add(riskRow.Domain);
+                }
+            });
+
+            const coverageRate = totalRisks > 0 ? ((coveredRisks / totalRisks) * 100).toFixed(1) : '0.0';
+
+            document.getElementById('totalRisks').textContent = totalRisks;
+            document.getElementById('coveredRisks').textContent = coveredRisks;
+            document.getElementById('coverageRate').textContent = coverageRate + '%';
+            document.getElementById('uniqueDomains').textContent = domains.size;
+        }
+
+        function createDomainChart(data) {
+            const ctx = document.getElementById('domainChart').getContext('2d');
+            
+            if (domainChart) {
+                domainChart.destroy();
+            }
+
+            const labels = data.map(d => d.subdomain.length > 20 ? d.subdomain.substring(0, 20) + '...' : d.subdomain);
+            const coverageData = data.map(d => parseFloat(d.coverage));
+            const colors = coverageData.map(c => 
+                c >= 80 ? 'rgba(40, 167, 69, 0.8)' :
+                c >= 50 ? 'rgba(255, 193, 7, 0.8)' :
+                'rgba(220, 53, 69, 0.8)'
+            );
+
+            domainChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Coverage %',
+                        data: coverageData,
+                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        pointBackgroundColor: colors,
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(102, 126, 234, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 20
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function createCharacteristicsChart(data) {
+            const ctx = document.getElementById('characteristicsChart').getContext('2d');
+            
+            if (characteristicsChart) {
+                characteristicsChart.destroy();
+            }
+
+            const labels = data.map(d => `${d.characteristic}: ${d.category}`);
+            const coverageData = data.map(d => parseFloat(d.coverage));
+            const colors = coverageData.map(c => 
+                c >= 80 ? 'rgba(40, 167, 69, 0.8)' :
+                c >= 50 ? 'rgba(255, 193, 7, 0.8)' :
+                'rgba(220, 53, 69, 0.8)'
+            );
+
+            characteristicsChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Coverage %',
+                        data: coverageData,
+                        backgroundColor: 'rgba(118, 75, 162, 0.2)',
+                        borderColor: 'rgba(118, 75, 162, 1)',
+                        pointBackgroundColor: colors,
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(118, 75, 162, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 20
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function createDomainTable(data) {
+            const tbody = document.querySelector('#domainTable tbody');
+            tbody.innerHTML = '';
+
+            data.sort((a, b) => parseFloat(b.coverage) - parseFloat(a.coverage));
+
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                const coverage = parseFloat(row.coverage);
+                const coverageClass = coverage >= 80 ? 'coverage-high' : 
+                                    coverage >= 50 ? 'coverage-medium' : 'coverage-low';
+
+                tr.innerHTML = `
+                    <td>${row.domain}</td>
+                    <td>${row.subdomain}</td>
+                    <td>${row.total}</td>
+                    <td>${row.covered}</td>
+                    <td class="${coverageClass}">${row.coverage}%</td>
+                    <td>${row.gap}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function createCharacteristicsTable(data) {
+            const tbody = document.querySelector('#characteristicsTable tbody');
+            tbody.innerHTML = '';
+
+            data.sort((a, b) => parseFloat(b.coverage) - parseFloat(a.coverage));
+
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                const coverage = parseFloat(row.coverage);
+                const coverageClass = coverage >= 80 ? 'coverage-high' : 
+                                    coverage >= 50 ? 'coverage-medium' : 'coverage-low';
+
+                tr.innerHTML = `
+                    <td>${row.characteristic}</td>
+                    <td>${row.category}</td>
+                    <td>${row.total}</td>
+                    <td>${row.covered}</td>
+                    <td class="${coverageClass}">${row.coverage}%</td>
+                    <td>${row.gap}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
