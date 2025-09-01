@@ -1,0 +1,114 @@
+Risk ID,Page,Risk Type (English),Description
+2.2.1,,Initial Understanding,
+2.2.1.1,,Implicit Bias,Lifecycle: Initial Understanding. Description: Unconscious attitudes or stereotypes
+2.2.1.2,,Systemic Bias,Lifecycle: Initial Understanding. Description: Social or institutional norms
+2.2.1.3,,Confirmation Bias,Lifecycle: Initial Understanding. Description: Data/evidence supporting beliefs
+2.2.1.4,,Sensitive Attribute Bias,"Lifecycle: Initial Understanding. Description: Gender, race, age, or social status"
+2.2.2,,Data Collection,
+2.2.2.1,,Representation Bias,Lifecycle: Data Collection. Description: Data does not reflect population
+2.2.2.2,,Selection Bias,Lifecycle: Data Collection. Description: Selection ignores parts of groups
+2.2.2.3,,Sampling Bias,Lifecycle: Data Collection. Description: Sampling ignores parts of groups
+2.2.2.4,,Participation Bias,Lifecycle: Data Collection. Description: Participation from parts of groups
+2.2.2.5,,Measurement Bias,Lifecycle: Data Collection. Description: Measurement only parts of groups
+2.2.2.6,,Historical Data Bias,Lifecycle: Data Collection. Description: Reflects current inequalities
+2.2.3,,Pre-processing,
+2.2.3.1,,Aggregation Bias,Lifecycle: Pre-processing. Description: Improper combination from groups
+2.2.3.2,,Data Loss Bias,Lifecycle: Pre-processing. Description: Analysis not sensitive to data diversity
+2.2.3.3,,Selection Bias,Lifecycle: Pre-processing. Description: Features not sufficient to represent problems/not relevant
+2.2.3.4,,Representation Bias,Lifecycle: Pre-processing. Description: Lack sufficient diversity in training data
+2.2.4,,Processing,
+2.2.4.1,,Algorithmic Bias,Lifecycle: Processing. Description: Algorithm selection process not uniform
+2.2.4.2,,Validation Bias,Lifecycle: Processing. Description: Validation not equal
+2.2.4.3,,Representation Bias,Lifecycle: Processing. Description: Data set to build model less represents population
+2.2.5,,Post-processing,
+2.2.5.1,,Evaluation Bias,Lifecycle: Post-processing. Description: Model less suitable
+2.2.5.2,,Predictive Bias,Lifecycle: Post-processing. Description: Model accuracy less suitable
+2.2.6,,Post-processing Monitoring,
+2.2.6.1,,Concept Drift,Lifecycle: Post-processing Monitoring. Description: Data changes after deployment
+2.2.6.2,,Automation Bias,Lifecycle: Post-processing Monitoring. Description: Too dependent on AI
+2.2.6.3,,Feedback Loop Bias,Lifecycle: Post-processing Monitoring. Description: Model influences input data
+2.2.6.4,,Dismissal Bias,Lifecycle: Post-processing Monitoring. Description: Ignoring critical warnings
+,,,
+Risk ID,,Risk Type (English),Description
+2.4.1.a,,Algorithmic Bias,Description: Bias algoritma
+2.4.1.b,,Disinformation,Description: deepfake
+2.4.1.c,,Personal Data Protection and Data Security Violations,
+2.4.1.c.1,,Data Collection Risks,Description: personal data protection violations when training data collection process is conducted without valid consent from personal data subjects
+2.4.1.c.2,,Data Breach,Description: Data breach
+2.4.1.d,,Copyright Violations,
+2.4.1.d.1,,Copyright Infringement,Description: has raised copyright violation risks over data used as basis for creating new content
+2.4.1.d.2,,Traditional Cultural Elements,Description: use of traditional cultural elements or local artistic expressions as AI training data without permission or fair compensation to origin communities
+2.4.1.e,,Shortcut Learning,Description: Shortcut learning
+2.4.1.f,,Adversarial Vulnerabilities,
+2.4.1.f.1,,Adversarial Attack,"Description: Adversarial attack, vulnerability to manipulation-based attack"
+2.4.1.f.2,,Adversarial Use of AI,Description: Adversarial use of AI (Misuse) for cyber attacks
+2.4.1.g,,AI Deception,
+2.4.1.g.1,,Strategic Deception,Description: AI formulates deception strategies to achieve goals
+2.4.1.g.2,,Sycophancy,Description: AI gives answers that users want to hear
+2.4.1.g.3,,Unfaithful Reasoning,Description: AI reasons dishonestly to justify its results
+2.4.1.h,,"Vulnerable Group Individual Risks (Women, Children, People with Disabilities, Elderly, and Indigenous Communities)",
+2.4.1.h.1,,Data Collection without Permission,Description: Data collection without permission due to minimal understanding of AI workings
+2.4.1.h.2,,Algorithmic Bias,Description: Algorithmic bias
+2.4.1.h.3,,Excessive AI Output Influence,Description: Excessive influence from AI output that is considered neutral
+2.4.1.h.4,,Children Exploitation Risks,Description: Risks from exploitation
+2.4.1.h.5,,Loss of Children's Learning Autonomy,Description: loss of children's healthy learning autonomy
+2.4.1.h.6,,Accessibility Risks,Description: Risks from accessibility for disabled people
+2.4.2.a,21,Economics and Finance,
+2.4.2.a.1,21,Job Displacement Risk,Description: Job displacement risk
+2.4.2.a.2,21,Salary Reduction,Description: Salary reduction through reduced hours of work
+2.4.2.a.3,21,Reduced Purchasing Power,Description: Risks from salary reduction and job displacement: decreased household purchasing power and income
+2.4.2.b,21,"Welfare, Quality of Life, and Health",
+2.4.2.b.1,21,Social Isolation Risk,Description: Risk from AI dependency: social isolation
+2.4.2.b.2,21,Weakened Critical Thinking,Description: Risk from AI dependency: weakening critical thinking skills
+2.4.2.b.3,21,Psychological Risks,Description: Risk from AI dependency: emergence of psychological risks
+2.4.2.b.4,21,Patient Harm from AI Errors,Description: Patient losses due to AI errors
+2.4.2.b.5,21,Medical AI Tool Misuse,Misuse of medical AI tools
+2.4.2.b.6,21,Medical AI Bias Risk,Description: Bias risk in medical AI
+2.4.2.b.7,21,Perpetuating Healthcare Injustice,Description: AI perpetuates lack of justice in healthcare
+2.4.2.b.8,21,Healthcare Transparency Issues,Description: Transparency problems in healthcare AI
+2.4.2.b.9,21,Healthcare Privacy and Security Problems,Description: Privacy and security problems in healthcare AI
+2.4.2.b.10,21,AI Accountability Gap in Healthcare,Description: Gap in AI accountability in healthcare
+2.4.2.b.11,21,Real-world Healthcare Implementation Barriers,Description: Barriers in real-world healthcare implementation
+2.4.2.c.1,22,Information Quality and Social Impact,
+2.4.2.c.1.1,22,Biased Information Impact,Description: Biased information can strengthen existing social gaps and weaken principles of equal opportunity and justice in education
+2.4.2.c.1.2,22,Hallucination Impact,Description: AI hallucination can strengthen existing social gaps and weaken principles of equal opportunity and justice in education
+2.4.2.c.2,22,Assessment Implementation Risks,
+2.4.2.c.2.1,22,Assessment Method Transition Burden,"Description: Shift to holistic assessment methods increases institutional workload in communication with staff and students, implementation of different assessment methods, evaluation, documentation, etc."
+2.4.2.c.3,22,Data Privacy in Education,
+2.4.2.c.3.1,22,Sensitive Data Collection Requirements,"Description: AI use in education may require collection and analysis of sensitive personal data, such as academic performance and student behavioral patterns"
+2.4.2.c.3.2,22,Data Misuse Risk,Description: Institutions implementing AI systems must ensure collected data is used according to purpose and not misused or shared with third parties without permission
+2.4.2.c.4,22,Employment Impact in Higher Education,
+2.4.2.c.4.1,22,Job Loss in Educational Institutions,"Description: AI integration in higher education can result in job losses for institutions, raising ethical concerns about impact on academic workforce"
+2.4.2.c.5,22,Digital Divide and Cultural Weakening,
+2.4.2.c.5.1,22,Digital Gap Expansion,Description: AI development risks expanding digital divide and weakening local culture
+2.4.2.c.5.2,22,Social Bias Reinforcement,Description: AI can strengthen social bias and disrupt cultural norms if not designed contextually
+2.4.2.c.6,22,Language Representation Issues,
+2.4.2.c.6.1,22,Indonesian Language Dominance,Description: Only Indonesian language has sufficient representation for AI development in Indonesia
+2.4.2.c.6.2,22,Regional Language Exclusion,Description: Regional languages and indigenous community languages are almost completely not accommodated
+2.4.2.c.6.3,22,Digital Exclusion Creation,"Description: This inequality creates digital exclusion, where local language speakers do not have equal access to AI technology"
+2.4.2.c.6.4,22,Unequal Technology Utilization,Description: Local language speakers lack equal access in terms of utilization of AI technology
+2.4.2.c.6.5,22,Unequal Technology Control,Description: Local language speakers lack equal access in terms of control of AI technology
+2.4.2.c.6.6,22,Unequal Design Participation,Description: Local language speakers lack equal access in terms of participation in design and model training processes
+2.4.2.c.7,22,Cultural Data Exploitation,
+2.4.2.c.7.1,22,Traditional Cultural Expression Misuse,"Description: Use of traditional cultural motifs, languages, or expressions as training data without consent or benefit return to origin communities"
+2.4.2.c.7.2,22,Data Colonialism Reinforcement,Description: Can strengthen data colonialism and cultural power inequality
+2.4.2.d,23,Environmental risks,
+2.4.2.d.1,23,Environmentally Destructive Mining,"Description: Microchips that drive AI require certain metal elements, which are often mined in environmentally destructive way"
+2.4.2.d.2,23,Hazardous Electronic Waste,Data centers often produce electronic waste containing hazardous substances such as mercury and lead
+2.4.2.d.3,23,Water Usage,Intensive water usage during construction and operation to cool down the electrical components
+2.4.2.d.4,23,Greenhouse Emissions,"Large datacenters require a lot of electricity, mostly from fossil fuels, leading to increased emission"
+2.4.2.e.,23,Discrimination,
+2.4.2.e.1,23,Bias towards vulnerable population,
+2.4.2.f.,24,Declining trust to democracy institution,
+2.4.2.f.1,24,Declining trust to democracy institution,
+2.4.2.f.2,24,Deepfakes to manipulate opinions,
+2.4.2.f.3,24,Risks from unaccountable / unexplainable AI-based decisions,
+3.1.1,26,Analysis of Current Condition : Ethics,
+3.1.1.1,28,Social Protection - AI Capabilities Gap,Social protection values might not keep up with technology development pace
+3.1.1.2,28,Bias,Risks from AI bias
+3.1.1.3,28,AI misuse by malicious actors - Deepfakes,
+3.1.1.4,28,AI misuse by malicious actors - Automated discrimination,
+3.1.1.5,28,AI misuse by malicious actors - Mass surveillances,
+3.1.1.4,29,AI misuse by malicious actors - system hacking,Generally should fall under AI-assisted cybersecurity risks
+3.1.1.5,29,AI misuse by malicious actors - data theft,Generally should fall under AI-assisted cybersecurity risks
+3.1.1.6,29,AI misuse by malicious actors - attack detection avoidance,Generally should fall under AI-assisted cybersecurity risks
